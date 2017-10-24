@@ -25,15 +25,11 @@ yum -y install \
 	libicu-devel \
 	libxslt-devel \
 	wget && \
-
 # Download PHP and extract
-
 wget https://secure.php.net/get/php-5.6.30.tar.xz/from/this/mirror -O /tmp/php.tar.xz && \
 tar -xJf /tmp/php.tar.xz -C /tmp && \
 cd /tmp/php-5.6.30 && \
-
 # Build And Install
-
 ./buildconf --force && \
 ./configure \
 	--prefix=/usr/local/php \
@@ -78,11 +74,10 @@ cd /tmp/php-5.6.30 && \
 cd /tmp/php-5.6.30 && \
 make clean && \
 make && \
-make install
-
+make install && \
+mkdir /usr/local/php/etc/conf.d/ && \
 # Configuration PHP
-
-RUN useradd -r -s /bin/false php-fpm && \
+useradd -r -s /bin/false php-fpm && \
 cp /tmp/php-5.6.30/php.ini-production /usr/local/php/etc/php.ini && \
 chmod 0644 /usr/local/php/etc/php.ini && \
 mkdir /tmp/php_sessions && \
@@ -106,11 +101,9 @@ echo 'pathmunge /usr/local/php/bin' > /etc/profile.d/php.sh && \
 ln -sfn /usr/local/php/bin/php /usr/bin/php && \
 ln -sfn /usr/local/php/sbin/php-fpm /usr/sbin/php-fpm && \
 mkdir /var/log/php-fpm && \
-chown -hR php-fpm:php-fpm /var/log/php-fpm
-
+chown -hR php-fpm:php-fpm /var/log/php-fpm && \
 # Clean up
-
-RUN yum -y --setopt=groupremove_leaf_only=1 groupremove 'Development Tools' && \
+yum -y --setopt=groupremove_leaf_only=1 groupremove 'Development Tools' && \
 rm -f /tmp/php.tar.xz && \
 rm -rf /tmp/php-5.6.30 && \
 yum -y remove wget && \
