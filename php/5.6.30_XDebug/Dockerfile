@@ -20,6 +20,9 @@ ADD conf/xdebug.ini /usr/local/php/etc/conf.d/xdebug.ini
 
 WORKDIR /var/www/html
 
+COPY scripts /usr/share/container-scripts
+
 EXPOSE 9000 9001
 ENTRYPOINT ["/usr/share/container-scripts/docker-entrypoint"]
+CMD ["/usr/share/container-scripts/init-php-xdebug"]
 CMD ["php-fpm", "-F"]
