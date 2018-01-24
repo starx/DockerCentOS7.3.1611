@@ -10,8 +10,8 @@ cd /tmp/xdebug-2.5.4 && \
 ./configure --with-php-config=/usr/local/php/bin/php-config && \
 make && \
 cp modules/xdebug.so /usr/local/php/lib/php/extensions/no-debug-non-zts-20131226/ && \
-mkdir -p /var/log/xdebug_dumps && \
-chown -hR php-fpm:php-fpm /var/log/xdebug_dumps && \
+mkdir -p /var/log/xdebug_profiler_dumps && \
+chown -hR php-fpm:php-fpm /var/log/xdebug_profiler_dumps && \
 rm -f /tmp/xdebug.tgz && \
 rm -rf /tmp/xdebug-2.5.4 && \
 yum remove -y wget autoconf
@@ -25,4 +25,3 @@ COPY scripts /usr/share/container-scripts
 EXPOSE 9000 9001
 ENTRYPOINT ["/usr/share/container-scripts/docker-entrypoint"]
 CMD ["/usr/share/container-scripts/init-php-xdebug"]
-CMD ["php-fpm", "-F"]
