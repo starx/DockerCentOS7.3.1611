@@ -24,12 +24,24 @@ file_env() {
 
 file_env 'XDEBUG_REMOTE_HOST' '127.0.0.1'
 file_env 'XDEBUG_REMOTE_PORT' '9001'
+# Profiler related
 file_env 'XDEBUG_PROFILER_ENABLE' '0'
 file_env 'XDEBUG_PROFILER_ENABLE_TRIGGER' '1'
 file_env 'XDEBUG_PROFILER_OUTPUT_DIR' '/var/log/xdebug_profiler_dumps'
 # Create the profiler dump paths
 if [ ! -z "$XDEBUG_PROFILER_OUTPUT_DIR" ]; then
   mkdir -p $XDEBUG_PROFILER_OUTPUT_DIR
+  chown php-fpm:php-fpm $XDEBUG_PROFILER_OUTPUT_DIR
+fi
+# Trace related
+file_env 'XDEBUG_AUTO_TRACE' '0'
+file_env 'XDEBUG_TRACE_ENABLE_TRIGGER' '1'
+file_env 'XDEBUG_TRACE_FORMAT' '0'
+file_env 'XDEBUG_TRACE_OUTPUT_DIR' '/var/log/xdebug_trace_dumps'
+# Create the TRACE dump paths
+if [ ! -z "$XDEBUG_TRACE_OUTPUT_DIR" ]; then
+  mkdir -p $XDEBUG_TRACE_OUTPUT_DIR
+  chown php-fpm:php-fpm $XDEBUG_TRACE_OUTPUT_DIR
 fi
 
 # Make the configuration changes
@@ -38,6 +50,10 @@ sed -i "s/xdebug.remote_port=.*/xdebug.remote_port=$XDEBUG_REMOTE_PORT/" /usr/lo
 sed -i "s/xdebug.profiler_enable=.*/xdebug.profiler_enable=$XDEBUG_PROFILER_ENABLE/" /usr/local/php/etc/conf.d/xdebug.ini
 sed -i "s/xdebug.profiler_enable_trigger=.*/xdebug.profiler_enable_trigger=$XDEBUG_PROFILER_ENABLE_TRIGGER/" /usr/local/php/etc/conf.d/xdebug.ini
 sed -i "s|xdebug.profiler_output_dir=.*|xdebug.profiler_output_dir=$XDEBUG_PROFILER_OUTPUT_DIR|" /usr/local/php/etc/conf.d/xdebug.ini
+sed -i "s/xdebug.auto_trace=.*/xdebug.auto_trace=$XDEBUG_AUTO_TRACE/" /usr/local/php/etc/conf.d/xdebug.ini
+sed -i "s/xdebug.trace_enable_trigger=.*/xdebug.trace_enable_trigger=$XDEBUG_TRACE_ENABLE_TRIGGER/" /usr/local/php/etc/conf.d/xdebug.ini
+sed -i "s/xdebug.trace_format=.*/xdebug.trace_format=$XDEBUG_TRACE_FORMAT/" /usr/local/php/etc/conf.d/xdebug.ini
+sed -i "s|xdebug.trace_output_dir=.*|xdebug.trace_output_dir=$XDEBUG_TRACE_OUTPUT_DIR|" /usr/local/php/etc/conf.d/xdebug.ini
 
-echo 'Starting PHP FPM in foreground'
+echo 'Starting PHP in foreground'
 exec php-fpm -F
