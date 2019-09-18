@@ -6,7 +6,7 @@ yum update -y && \
 yum install -y erlang wget && \
 rpm --import https://www.rabbitmq.com/rabbitmq-release-signing-key.asc && \
 # Download and install
-wget https://dl.bintray.com/rabbitmq/rabbitmq-server-rpm/rabbitmq-server-3.6.12-1.el7.noarch.rpm -O /tmp/rmq.rpm && \
+wget https://www.rabbitmq.com/releases/rabbitmq-server/v3.6.12/rabbitmq-server-3.6.12-1.el7.noarch.rpm -O /tmp/rmq.rpm && \
 yum install -y /tmp/rmq.rpm
 
 RUN chkconfig rabbitmq-server on 
